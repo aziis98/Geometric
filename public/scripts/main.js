@@ -1,1 +1,3 @@
-angular.module('geometric', ['ngAnimate']);
+angular.module('geometric', ['toolbar']).controller('geomCtrl', function($scope) {
+  return $scope.author = "Antonio";
+});

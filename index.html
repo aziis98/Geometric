@@ -1,18 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="geometric">
     <head>
         <meta charset="utf-8">
         <title>Geometric</title>
 
-        <link rel="stylesheet" href="public/style.css">
+        <link rel="stylesheet" href="public/styles/style.css">
 
         <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
 
+        <script src="public/scripts/ng-toolbar.js"></script>
         <script src="public/scripts/main.js"></script>
     </head>
-    <body>
+    <body ng-controller="geomCtrl">
+        <toolbar>
+            <toolgroup>
+                <toolitem icon="assets/tools/point.png" label="Point"></toolitem>
+                <toolitem icon="assets/tools/point.png" label="Centroid"></toolitem>
+            </toolgroup>
+        </toolbar>
 
+        <!-- <structure>
+            <pane title="Element View">
+
+            </pane>
+            <pane title="Properties">
+
+            </pane>
+        </structure> -->
     </body>
 </html>

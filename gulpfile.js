@@ -9,10 +9,12 @@ gulp.task('compileCoffee', function() {
 })
 
 gulp.task('compileLess', function() {
-    return gulp.src('src/**/*.less')
+    return gulp.src('src/styles/**/*.less')
         .pipe(less())
-        .pipe(gulp.dest('public'))
+        .pipe(gulp.dest('public/styles'))
 })
+
+gulp.task('compile', [ 'compileCoffee', 'compileLess' ])
 
 gulp.task('default', function() {
     return gulp.watch('src/**/*.{coffee, less}', ['compileCoffee', 'compileLess'])

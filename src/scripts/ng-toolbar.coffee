@@ -1,23 +1,22 @@
-angular.module('toolbar', ['tool'])
-.directive 'toolbar', ->
-    return {
-        restrict: 'E'
-        transclude: true
-        templateUrl: 'templates/toolbar.frag.html'
-    }
-.directive 'tool', ->
-    return {
-        restrict: 'E'
-        transclude: true
-        templateUrl: 'templates/tool.frag.html'
-    }
-.directive 'toolitem', ->
-    return {
-        restrict: 'E'
-        scope: {
-            icon: '='
-            label: '='
-            
+angular.module('toolbar', [])
+    .directive 'toolbar', ->
+        return {
+            restrict: 'E'
+            transclude: true
+            templateUrl: 'templates/toolbar.frag.html'
         }
-        templateUrl: 'templates/toolitem.frag.html'
-    }
+    .directive 'toolgroup', ->
+        return {
+            restrict: 'E'
+            transclude: true
+            templateUrl: 'templates/toolgroup.frag.html'
+        }
+    .directive 'toolitem', ->
+        return {
+            restrict: 'E'
+            scope: {
+                icon: '@'
+                label: '@'
+            }
+            templateUrl: 'templates/toolitem.frag.html'
+        }
