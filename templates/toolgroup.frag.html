@@ -1,3 +1,6 @@
-<div class="toolgroup" ng-transclude>
-    
+<div class="toolgroup">
+    <img class="toolgroup-icon" ng-src="{{groupicon}}" ng-click="menu = !menu"/>
+    <div class="toolgroup-menu" ng-if="menu" ng-transclude>
+
+    </div>
 </div>

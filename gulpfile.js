@@ -17,5 +17,5 @@ gulp.task('compileLess', function() {
 gulp.task('compile', [ 'compileCoffee', 'compileLess' ])
 
 gulp.task('default', function() {
-    return gulp.watch('src/**/*.{coffee, less}', ['compileCoffee', 'compileLess'])
+    return gulp.watch('src/**/*.*', ['compile'])
 })

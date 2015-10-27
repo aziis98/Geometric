@@ -1,3 +1,6 @@
-toolbar {
+.toolbar {
   background-color: white;
+  border: 1px solid #f0f0f0;
+  width: 50px;
+  height: 100vh;
 }

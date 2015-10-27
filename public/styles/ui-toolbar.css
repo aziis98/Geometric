@@ -1,0 +1,46 @@
+.toolbar {
+  background-color: white;
+  border-right: 1px solid #f0f0f0;
+  width: 50px;
+  height: 100vh;
+}
+.toolgroup {
+  width: 50px;
+  height: 50px;
+  position: relative;
+}
+.toolgroup .toolgroup-icon:hover {
+  background: #eaeaea;
+}
+.toolgroup .toolgroup-menu {
+  position: absolute;
+  left: 50px;
+  top: 0px;
+  border-top: 1px solid #f0f0f0;
+  border-right: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+  margin-top: -1px;
+}
+.toolgroup .toolgroup-menu .toolitem {
+  width: 100px;
+  height: 50px;
+}
+.toolgroup .toolgroup-menu .toolitem .toolitem-icon {
+  margin: auto;
+  height: 35px;
+  display: block;
+  padding: 2px;
+}
+.toolgroup .toolgroup-menu .toolitem .toolitem-label {
+  text-align: center;
+  display: block;
+  font-size: 10px;
+  margin-top: -3px;
+}
+.toolgroup .toolgroup-menu .toolitem:hover {
+  background: #eaeaea;
+}
+.toolgroup-icon {
+  width: 50px;
+  height: 50px;
+}
