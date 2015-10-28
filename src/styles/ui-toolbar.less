@@ -4,7 +4,7 @@
     background-color: @ui-color;
     border-right: 1px solid @ui-borders;
     width: 50px;
-    height: 100vh;
+    height: calc(~"100vh - 5px");
 }
 
 .toolgroup {
@@ -23,9 +23,8 @@
         left: 50px;
         top: 0px;
 
-        border-top: 1px solid @ui-borders;
-        border-right: 1px solid @ui-borders;
-        border-bottom: 1px solid @ui-borders;
+        border: 1px solid @ui-borders;
+        background-color: @ui-pane;
 
         margin-top: -1px;
 
@@ -51,7 +50,28 @@
             }
         }
 
+        &.ng-enter, &.ng-leave {
+            transition: all 250ms;
+            .toolitem {
+                transition: all 150ms;
+            }
+        }
 
+        &.ng-enter, &.ng-leave.ng-leave-active {
+            width: 0;
+            .toolitem {
+                opacity: 0;
+                // margin-left: -100px;
+            }
+        }
+
+        &.ng-leave, &.ng-enter.ng-enter-active {
+            width: 100px;
+            .toolitem {
+                opacity: 1;
+                // margin-left: 0;
+            }
+        }
 
     }
 }

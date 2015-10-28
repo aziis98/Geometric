@@ -1,8 +1,8 @@
 .toolbar {
   background-color: white;
-  border-right: 1px solid #f0f0f0;
+  border-right: 1px solid #dadada;
   width: 50px;
-  height: 100vh;
+  height: calc(100vh - 5px);
 }
 .toolgroup {
   width: 50px;
@@ -16,9 +16,8 @@
   position: absolute;
   left: 50px;
   top: 0px;
-  border-top: 1px solid #f0f0f0;
-  border-right: 1px solid #f0f0f0;
-  border-bottom: 1px solid #f0f0f0;
+  border: 1px solid #dadada;
+  background-color: white;
   margin-top: -1px;
 }
 .toolgroup .toolgroup-menu .toolitem {
@@ -39,6 +38,30 @@
 }
 .toolgroup .toolgroup-menu .toolitem:hover {
   background: #eaeaea;
+}
+.toolgroup .toolgroup-menu.ng-enter,
+.toolgroup .toolgroup-menu.ng-leave {
+  transition: all 250ms;
+}
+.toolgroup .toolgroup-menu.ng-enter .toolitem,
+.toolgroup .toolgroup-menu.ng-leave .toolitem {
+  transition: all 150ms;
+}
+.toolgroup .toolgroup-menu.ng-enter,
+.toolgroup .toolgroup-menu.ng-leave.ng-leave-active {
+  width: 0;
+}
+.toolgroup .toolgroup-menu.ng-enter .toolitem,
+.toolgroup .toolgroup-menu.ng-leave.ng-leave-active .toolitem {
+  opacity: 0;
+}
+.toolgroup .toolgroup-menu.ng-leave,
+.toolgroup .toolgroup-menu.ng-enter.ng-enter-active {
+  width: 100px;
+}
+.toolgroup .toolgroup-menu.ng-leave .toolitem,
+.toolgroup .toolgroup-menu.ng-enter.ng-enter-active .toolitem {
+  opacity: 1;
 }
 .toolgroup-icon {
   width: 50px;

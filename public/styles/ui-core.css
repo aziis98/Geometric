@@ -2,6 +2,10 @@ body {
   font-family: "Segoe UI";
   font-size: 14px;
   margin: 0;
+  margin-top: 1px;
+  margin-left: 1px;
   padding: 0;
   overflow: hidden;
+  background-color: #e8e8e8;
+  border: 1px solid #dadada;
 }
