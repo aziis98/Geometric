@@ -28,4 +28,4 @@ angular.module('toolbar', ['ngAnimate']).directive('toolbar', function() {
     },
     templateUrl: 'templates/toolitem.frag.html'
   };
-});
+}).controller('toolCtrl', function($scope) {});

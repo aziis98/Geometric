@@ -27,3 +27,4 @@ angular.module('toolbar', [ 'ngAnimate' ])
             }
             templateUrl: 'templates/toolitem.frag.html'
         }
+    .controller 'toolCtrl', ($scope) ->

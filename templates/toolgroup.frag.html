@@ -1,5 +1,5 @@
-<div class="toolgroup">
-    <img class="toolgroup-icon" ng-src="{{groupicon}}" ng-click="menu = !menu"/>
+<div class="toolgroup" ng-mouseleave="menu = false" ng-mouseenter="menu = true">
+    <img class="toolgroup-icon" ng-src="{{groupicon}}"/>
     <div class="toolgroup-menu" ng-if="menu" ng-transclude>
 
     </div>

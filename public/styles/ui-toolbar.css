@@ -2,7 +2,7 @@
   background-color: white;
   border-right: 1px solid #dadada;
   width: 50px;
-  height: calc(100vh - 5px);
+  height: 100vh;
 }
 .toolgroup {
   width: 50px;
@@ -23,18 +23,21 @@
 .toolgroup .toolgroup-menu .toolitem {
   width: 100px;
   height: 50px;
+  cursor: pointer;
 }
 .toolgroup .toolgroup-menu .toolitem .toolitem-icon {
   margin: auto;
   height: 35px;
   display: block;
   padding: 2px;
+  cursor: pointer;
 }
 .toolgroup .toolgroup-menu .toolitem .toolitem-label {
   text-align: center;
   display: block;
   font-size: 10px;
   margin-top: -3px;
+  cursor: pointer;
 }
 .toolgroup .toolgroup-menu .toolitem:hover {
   background: #eaeaea;
