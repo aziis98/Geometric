@@ -4,5 +4,7 @@ angular.module('infobar', [ 'handler' ])
         scope: { }
         replace: true
         templateUrl: 'templates/infobar.frag.html'
-        controller: ($scope, tool) ->
-            $scope.tool = tool.id
+        controller: ($scope, $interval, tool) ->
+            $scope.$watch((-> tool.id), (-> $scope.tool = tool.id))
+
+            # $scope.tool = tool.id

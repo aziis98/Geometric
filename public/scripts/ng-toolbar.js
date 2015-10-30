@@ -24,8 +24,15 @@ angular.module('toolbar', ['ngAnimate']).directive('toolbar', function() {
     replace: true,
     scope: {
       icon: '@',
-      label: '@'
+      label: '@',
+      tool: '@'
     },
-    templateUrl: 'templates/toolitem.frag.html'
+    templateUrl: 'templates/toolitem.frag.html',
+    controller: function($scope, tool) {
+      return $scope.setTool = function($event) {
+        $event.stopPropagation();
+        return tool.selectTool($scope.tool);
+      };
+    }
   };
-}).controller('toolCtrl', function($scope) {});
+});

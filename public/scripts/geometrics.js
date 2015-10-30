@@ -3,6 +3,10 @@ var PLine, PPlane, PPoint;
 exports.PPlane = PPlane = (function() {
   function PPlane() {
     this.primitives = [];
+    this.translation = {
+      x: 0,
+      y: 0
+    };
   }
 
   PPlane.prototype.render = function(g) {

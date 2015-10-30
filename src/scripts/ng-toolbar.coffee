@@ -24,7 +24,11 @@ angular.module('toolbar', [ 'ngAnimate' ])
             scope: {
                 icon: '@'
                 label: '@'
+                tool: '@'
             }
             templateUrl: 'templates/toolitem.frag.html'
+            controller: ($scope, tool) ->
+                $scope.setTool = ($event) ->
+                    $event.stopPropagation()
+                    tool.selectTool($scope.tool)
         }
-    .controller 'toolCtrl', ($scope) ->

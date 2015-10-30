@@ -1,4 +1,4 @@
-<div class="toolitem">
-    <img class="toolitem-icon" ng-src="{{icon}}"/>
-    <span class="toolitem-label">{{label}}</span>
+<div class="toolitem" ng-click="setTool($event)">
+    <img class="toolitem-icon" ng-src="{{icon}}" ng-click="setTool($event)"/>
+    <span class="toolitem-label" ng-click="setTool($event)">{{label}}</span>
 </div>

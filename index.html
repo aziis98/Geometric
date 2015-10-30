@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="public/styles/ui-canvas.css">
         <link rel="stylesheet" href="public/styles/ui-infobar.css">
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
 
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
         <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.js"></script> -->
@@ -24,13 +24,33 @@
     <body ng-controller="geomCtrl">
         <toolbar>
             <toolgroup groupicon="assets/tools/point.png">
-                <toolitem icon="assets/tools/point.png" label="Point"></toolitem>
-                <toolitem icon="assets/tools/point-centroid.png" label="Centroid"></toolitem>
+                <toolitem
+                    icon="assets/tools/point.png"
+                    label="Point"
+                    tool="point">
+                </toolitem>
+                <toolitem
+                    icon="assets/tools/point-centroid.png"
+                    label="Centroid"
+                    tool="point-centroid">
+                </toolitem>
             </toolgroup>
             <toolgroup groupicon="assets/tools/line.png">
-                <toolitem icon="assets/tools/line.png" label="Line"></toolitem>
-                <toolitem icon="assets/tools/line-parallel.png" label="Parallel"></toolitem>
-                <toolitem icon="assets/tools/line-perpendicular.png" label="Perpendicular"></toolitem>
+                <toolitem
+                    icon="assets/tools/line.png"
+                    label="Line"
+                    tool="line">
+                </toolitem>
+                <toolitem
+                    icon="assets/tools/line-parallel.png"
+                    label="Parallel"
+                    tool="line-parallel">
+                </toolitem>
+                <toolitem
+                    icon="assets/tools/line-perpendicular.png"
+                    label="Perpendicular"
+                    tool="line-perpendicular">
+                </toolitem>
             </toolgroup>
         </toolbar>
 

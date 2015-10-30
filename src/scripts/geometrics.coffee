@@ -3,6 +3,7 @@
 exports.PPlane = class PPlane
     constructor: ->
         @primitives = []
+        @translation = { x: 0, y: 0 }
 
     render: (g) ->
         for primitive in @primitives
