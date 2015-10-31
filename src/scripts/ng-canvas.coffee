@@ -1,6 +1,6 @@
 Graphics = require 'node-canvas-graphics-wrapper'
 
-angular.module('gcanvas', [])
+angular.module('gcanvas', [ 'handler' ])
     .directive 'geometricCanvas', () ->
         restrict: 'E'
         replace: true
@@ -10,9 +10,10 @@ angular.module('gcanvas', [])
                 <canvas id="canvas" ng-click="onClick()"></canvas>
             </div>
         '''
-        controller: ($scope, $rootScope, $interval, plane, tool, mouse) ->
+        controller: ($scope, $rootScope, $interval, plane, tool, toolhandler, mouse) ->
             $scope.onClick = ->
-                console.log 'clicked!'
+                if toolhandler[tool.id].handler
+                    tool.id = toolhandler[tool.id].handler()
 
             $rootScope.$on 'actionComplete', ->
                 console.log 'actionComplete() in canvas'
@@ -23,15 +24,14 @@ angular.module('gcanvas', [])
                 theCanvas.height = mouse.vh
                 Graphics.createFromCanvas(theCanvas, { width: theCanvas.width, height: theCanvas.height })
 
-
             render = (g) ->
                 g.ctx.clearRect(0, 0, g.viewport.width, g.viewport.height)
 
-                nearList = plane.getClosestTo(mouse.x - plane.translation.x, mouse.y - plane.translation.y)
+                tool.nearList = plane.getClosestTo(mouse.x - plane.translation.x, mouse.y - plane.translation.y)
                 g.translate(plane.translation.x, plane.translation.y)
                 plane.render g
                 for primitive in plane.primitives.slice().sort((a, b) -> a.typename.localeCompare(b.typename))
-                    if $scope.toolhandler[tool.id].highlight.has(primitive.typename)
+                    if toolhandler[tool.id].doHighlight(primitive)
                         primitive.highLight g
                 g.translate(-plane.translation.x, -plane.translation.y)
 
@@ -41,14 +41,3 @@ angular.module('gcanvas', [])
                     g.drawLine(mouse.x, mouse.y - 10, mouse.x, mouse.y + 10)
 
             $interval((-> render($scope.getGraphics())), 1000 / 120)
-
-            $scope.toolhandler = {
-                'point': {
-                    #highlight: ['PPoint', 'PLine', '...']
-                    highlight: []
-                    handler: (nearList) ->
-
-                    onComplete: ->
-
-                }
-            }

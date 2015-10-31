@@ -31,7 +31,7 @@ angular.module('toolbar', ['ngAnimate']).directive('toolbar', function() {
     controller: function($scope, tool) {
       return $scope.setTool = function($event) {
         $event.stopPropagation();
-        return tool.selectTool($scope.tool);
+        return tool.id = $scope.tool;
       };
     }
   };

@@ -1,7 +1,7 @@
 
 
 angular.module('geometric', [ 'toolbar', 'gcanvas', 'infobar', 'handler' ])
-    .controller 'geomCtrl', ($scope, $rootScope, $interval, $timeout, tool, mouse) ->
+    .controller 'geomCtrl', ($scope, $rootScope, $interval, $timeout, plane, tool, mouse) ->
         $scope.author = "Antonio"
 
         $ ->
@@ -18,6 +18,11 @@ angular.module('geometric', [ 'toolbar', 'gcanvas', 'infobar', 'handler' ])
                 mouse.py = mouse.y
                 mouse.x = e.pageX - offset.left
                 mouse.y = e.pageY - offset.top
+                mouse.button = e.which
+
+                if mouse.button == 2 # middle maybe
+                    plane.translation.x += mouse.x - mouse.px
+                    plane.translation.y += mouse.y - mouse.py
 
 
             mouse.vw = $('.gcanvas').width()

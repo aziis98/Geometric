@@ -2,16 +2,18 @@ var Graphics;
 
 Graphics = require('node-canvas-graphics-wrapper');
 
-angular.module('gcanvas', []).directive('geometricCanvas', function() {
+angular.module('gcanvas', ['handler']).directive('geometricCanvas', function() {
   return {
     restrict: 'E',
     replace: true,
     scope: {},
     template: '<div class="gcanvas">\n    <canvas id="canvas" ng-click="onClick()"></canvas>\n</div>',
-    controller: function($scope, $rootScope, $interval, plane, tool, mouse) {
+    controller: function($scope, $rootScope, $interval, plane, tool, toolhandler, mouse) {
       var render;
       $scope.onClick = function() {
-        return console.log('clicked!');
+        if (toolhandler[tool.id].handler) {
+          return tool.id = toolhandler[tool.id].handler();
+        }
       };
       $rootScope.$on('actionComplete', function() {
         return console.log('actionComplete() in canvas');
@@ -27,9 +29,9 @@ angular.module('gcanvas', []).directive('geometricCanvas', function() {
         });
       };
       render = function(g) {
-        var i, len, nearList, primitive, ref;
+        var i, len, primitive, ref;
         g.ctx.clearRect(0, 0, g.viewport.width, g.viewport.height);
-        nearList = plane.getClosestTo(mouse.x - plane.translation.x, mouse.y - plane.translation.y);
+        tool.nearList = plane.getClosestTo(mouse.x - plane.translation.x, mouse.y - plane.translation.y);
         g.translate(plane.translation.x, plane.translation.y);
         plane.render(g);
         ref = plane.primitives.slice().sort(function(a, b) {
@@ -37,7 +39,7 @@ angular.module('gcanvas', []).directive('geometricCanvas', function() {
         });
         for (i = 0, len = ref.length; i < len; i++) {
           primitive = ref[i];
-          if ($scope.toolhandler[tool.id].highlight.has(primitive.typename)) {
+          if (toolhandler[tool.id].doHighlight(primitive)) {
             primitive.highLight(g);
           }
         }
@@ -48,16 +50,9 @@ angular.module('gcanvas', []).directive('geometricCanvas', function() {
           return g.drawLine(mouse.x, mouse.y - 10, mouse.x, mouse.y + 10);
         }
       };
-      $interval((function() {
+      return $interval((function() {
         return render($scope.getGraphics());
       }), 1000 / 120);
-      return $scope.toolhandler = {
-        'point': {
-          highlight: [],
-          handler: function(nearList) {},
-          onComplete: function() {}
-        }
-      };
     }
   };
 });

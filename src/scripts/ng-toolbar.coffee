@@ -30,5 +30,5 @@ angular.module('toolbar', [ 'ngAnimate' ])
             controller: ($scope, tool) ->
                 $scope.setTool = ($event) ->
                     $event.stopPropagation()
-                    tool.selectTool($scope.tool)
+                    tool.id = $scope.tool
         }
