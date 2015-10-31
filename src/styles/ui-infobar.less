@@ -17,6 +17,19 @@
         cursor: default;
         margin: 3px;
         float: right;
+
+        span {
+            padding: 3px 5px;
+
+            &.btnComplete {
+                border-left: 1px solid @ui-borders;
+                border-right: 1px solid @ui-borders;
+
+                &:hover {
+                    background: @ui-hover;
+                }
+            }
+        }
     }
 
 }

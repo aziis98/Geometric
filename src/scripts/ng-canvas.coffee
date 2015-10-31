@@ -10,12 +10,12 @@ angular.module('gcanvas', [])
                 <canvas id="canvas" ng-click="onClick()"></canvas>
             </div>
         '''
-        controller: ($scope, $interval, plane, tool, mouse) ->
+        controller: ($scope, $rootScope, $interval, plane, tool, mouse) ->
             $scope.onClick = ->
                 console.log 'clicked!'
 
-            $scope.$on 'actionComplete', ->
-                console.log 'actionComplete()'
+            $rootScope.$on 'actionComplete', ->
+                console.log 'actionComplete() in canvas'
 
             $scope.getGraphics = ->
                 theCanvas = $('#canvas')[0]

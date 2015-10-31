@@ -4,8 +4,6 @@
   right: 250px;
   bottom: 27px;
   left: 50px;
-  z-index: -1;
-  border: 2px solid red;
 }
 .gcanvas #canvas {
   width: 100%;

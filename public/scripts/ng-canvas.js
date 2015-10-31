@@ -8,13 +8,13 @@ angular.module('gcanvas', []).directive('geometricCanvas', function() {
     replace: true,
     scope: {},
     template: '<div class="gcanvas">\n    <canvas id="canvas" ng-click="onClick()"></canvas>\n</div>',
-    controller: function($scope, $interval, plane, tool, mouse) {
+    controller: function($scope, $rootScope, $interval, plane, tool, mouse) {
       var render;
       $scope.onClick = function() {
         return console.log('clicked!');
       };
-      $scope.$on('actionComplete', function() {
-        return console.log('actionComplete()');
+      $rootScope.$on('actionComplete', function() {
+        return console.log('actionComplete() in canvas');
       });
       $scope.getGraphics = function() {
         var theCanvas;

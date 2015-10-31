@@ -1,7 +1,7 @@
 
 
 angular.module('geometric', [ 'toolbar', 'gcanvas', 'infobar', 'handler' ])
-    .controller 'geomCtrl', ($scope, $interval, $timeout, tool, mouse) ->
+    .controller 'geomCtrl', ($scope, $rootScope, $interval, $timeout, tool, mouse) ->
         $scope.author = "Antonio"
 
         $ ->
@@ -10,7 +10,7 @@ angular.module('geometric', [ 'toolbar', 'gcanvas', 'infobar', 'handler' ])
                 if e.which == 27
                     tool.id = 'none'
                 if e.which == 13
-                    $scope.$broadcast 'actionComplete'
+                    $rootScope.$emit 'actionComplete'
 
             offset = $('.gcanvas').offset()
             $(document).mousemove (e) ->

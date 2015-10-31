@@ -19,6 +19,7 @@
   border: 1px solid #dadada;
   background-color: white;
   margin-top: -1px;
+  z-index: 2;
 }
 .toolgroup .toolgroup-menu .toolitem {
   width: 100px;
