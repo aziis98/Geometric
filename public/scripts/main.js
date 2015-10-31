@@ -1,4 +1,4 @@
-angular.module('geometric', ['toolbar', 'gcanvas', 'infobar', 'handler']).controller('geomCtrl', function($scope, $rootScope, $interval, $timeout, plane, tool, mouse) {
+angular.module('geometric', ['toolbar', 'gcanvas', 'infobar', 'handler']).controller('geomCtrl', function($scope, $rootScope, $interval, $timeout, plane, tool, mouse, snapper) {
   $scope.author = "Antonio";
   $(function() {
     var offset;
@@ -13,6 +13,7 @@ angular.module('geometric', ['toolbar', 'gcanvas', 'infobar', 'handler']).contro
     });
     offset = $('.gcanvas').offset();
     $(document).mousemove(function(e) {
+      var pts;
       mouse.px = mouse.x;
       mouse.py = mouse.y;
       mouse.x = e.pageX - offset.left;
@@ -20,7 +21,16 @@ angular.module('geometric', ['toolbar', 'gcanvas', 'infobar', 'handler']).contro
       mouse.button = e.which;
       if (mouse.button === 2) {
         plane.translation.x += mouse.x - mouse.px;
-        return plane.translation.y += mouse.y - mouse.py;
+        plane.translation.y += mouse.y - mouse.py;
+      }
+      if (mouse.button === 3) {
+        pts = tool.nearList.filter(function(primitive) {
+          return primitive.typename === 'PPoint';
+        });
+        if (pts.length > 0 && pts[0]._dist <= 9 && pts[0].isUndependant()) {
+          pts[0].x = snapper.x;
+          return pts[0].y = snapper.y;
+        }
       }
     });
     mouse.vw = $('.gcanvas').width();
