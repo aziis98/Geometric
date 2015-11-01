@@ -7,6 +7,8 @@ angular.module('handler', [])
         id: 'none'
         nearList: []
         buffer: {  }
+        dragging: false
+        dragged: undefined
     }
 
     .value 'mouse', {
@@ -17,6 +19,7 @@ angular.module('handler', [])
         button: 0
         vw: 1920
         vh: 1080
+        dirty: true
     }
 
     .service 'snapper', (mouse, plane, tool) ->
@@ -32,11 +35,38 @@ angular.module('handler', [])
                 type: 'y'
                 y: 500
             }
-        ] # {type: 'x', ...}
+        ]
 
         @updateGuides = ->
-            pts = tool.nearList.filter forPoint
-            best = undefined
+            @guides = []
+            @x = mouse.x
+            @y = mouse.y
+
+            ptsX = plane.primitives
+                .filter((p) -> p.typename is 'PPoint')
+                .map((p) -> { obj: p, dist: Math.abs(p.getX() - mouse.x) })
+                .sort((a, b) -> a.dist - b.dist)
+
+            if ptsX.length > 1
+                if ptsX[1].dist <= 5
+                    @x = ptsX[1].obj.getX()
+                    @guides.push({
+                        type: 'x'
+                        x: ptsX[1].obj.getX()
+                    })
+
+            ptsY = plane.primitives
+                .filter((p) -> p.typename is 'PPoint')
+                .map((p) -> { obj: p, dist: Math.abs(p.getY() - mouse.y) })
+                .sort((a, b) -> a.dist - b.dist)
+
+            if ptsY.length > 1
+                if ptsY[1].dist <= 5
+                    @y = ptsY[1].obj.getY()
+                    @guides.push({
+                        type: 'y'
+                        y: ptsY[1].obj.getY()
+                    })
 
         @renderGuides = (g) ->
             g.setColor('#ffc300')
@@ -45,7 +75,9 @@ angular.module('handler', [])
                     when 'x'
                         g.drawLine(guide.x, -g.transform.y, guide.x, g.viewport.height - g.transform.y)
                     when 'y'
-                        g.drawLine(guide.y, -g.transform.x, g.viewport.height - g.transform.x, guide.y)
+                        g.drawLine(-g.transform.x, guide.y, g.viewport.height - g.transform.x, guide.y)
+
+        return
 
 
 

@@ -5,7 +5,9 @@ ref = require('./public/scripts/geometrics.js'), PPlane = ref.PPlane, PPoint = r
 angular.module('handler', []).value('plane', new PPlane()).value('tool', {
   id: 'none',
   nearList: [],
-  buffer: {}
+  buffer: {},
+  dragging: false,
+  dragged: void 0
 }).value('mouse', {
   x: 0,
   y: 0,
@@ -13,7 +15,8 @@ angular.module('handler', []).value('plane', new PPlane()).value('tool', {
   py: 0,
   button: 0,
   vw: 1920,
-  vh: 1080
+  vh: 1080,
+  dirty: true
 }).service('snapper', function(mouse, plane, tool) {
   this.x = 0;
   this.y = 0;
@@ -27,11 +30,50 @@ angular.module('handler', []).value('plane', new PPlane()).value('tool', {
     }
   ];
   this.updateGuides = function() {
-    var best, pts;
-    pts = tool.nearList.filter(forPoint);
-    return best = void 0;
+    var ptsX, ptsY;
+    this.guides = [];
+    this.x = mouse.x;
+    this.y = mouse.y;
+    ptsX = plane.primitives.filter(function(p) {
+      return p.typename === 'PPoint';
+    }).map(function(p) {
+      return {
+        obj: p,
+        dist: Math.abs(p.getX() - mouse.x)
+      };
+    }).sort(function(a, b) {
+      return a.dist - b.dist;
+    });
+    if (ptsX.length > 1) {
+      if (ptsX[1].dist <= 5) {
+        this.x = ptsX[1].obj.getX();
+        this.guides.push({
+          type: 'x',
+          x: ptsX[1].obj.getX()
+        });
+      }
+    }
+    ptsY = plane.primitives.filter(function(p) {
+      return p.typename === 'PPoint';
+    }).map(function(p) {
+      return {
+        obj: p,
+        dist: Math.abs(p.getY() - mouse.y)
+      };
+    }).sort(function(a, b) {
+      return a.dist - b.dist;
+    });
+    if (ptsY.length > 1) {
+      if (ptsY[1].dist <= 5) {
+        this.y = ptsY[1].obj.getY();
+        return this.guides.push({
+          type: 'y',
+          y: ptsY[1].obj.getY()
+        });
+      }
+    }
   };
-  return this.renderGuides = function(g) {
+  this.renderGuides = function(g) {
     var guide, i, len, ref1, results;
     g.setColor('#ffc300');
     ref1 = this.guides;
@@ -43,7 +85,7 @@ angular.module('handler', []).value('plane', new PPlane()).value('tool', {
           results.push(g.drawLine(guide.x, -g.transform.y, guide.x, g.viewport.height - g.transform.y));
           break;
         case 'y':
-          results.push(g.drawLine(guide.y, -g.transform.x, g.viewport.height - g.transform.x, guide.y));
+          results.push(g.drawLine(-g.transform.x, guide.y, g.viewport.height - g.transform.x, guide.y));
           break;
         default:
           results.push(void 0);

@@ -8,7 +8,7 @@ angular.module('gcanvas', ['handler']).directive('geometricCanvas', function() {
     replace: true,
     scope: {},
     template: '<div class="gcanvas">\n    <canvas id="canvas" ng-click="onClick()"></canvas>\n</div>',
-    controller: function($scope, $rootScope, $interval, plane, tool, toolhandler, mouse) {
+    controller: function($scope, $rootScope, $interval, plane, tool, toolhandler, mouse, snapper) {
       var render;
       $scope.onClick = function() {
         if (toolhandler[tool.id].handler) {
@@ -31,7 +31,13 @@ angular.module('gcanvas', ['handler']).directive('geometricCanvas', function() {
       render = function(g) {
         var i, len, primitive, ref;
         g.ctx.clearRect(0, 0, g.viewport.width, g.viewport.height);
-        tool.nearList = plane.getClosestTo(mouse.x - plane.translation.x, mouse.y - plane.translation.y);
+        if (mouse.dirty) {
+          mouse.x -= plane.translation.x;
+          mouse.y -= plane.translation.y;
+          mouse.dirty = false;
+        }
+        tool.nearList = plane.getClosestTo(mouse.x, mouse.y);
+        snapper.updateGuides();
         g.translate(plane.translation.x, plane.translation.y);
         plane.render(g);
         ref = plane.primitives.slice().sort(function(a, b) {
@@ -43,6 +49,7 @@ angular.module('gcanvas', ['handler']).directive('geometricCanvas', function() {
             primitive.highLight(g);
           }
         }
+        snapper.renderGuides(g);
         g.translate(-plane.translation.x, -plane.translation.y);
         if (tool.id !== 'none') {
           g.setColor('#000000');

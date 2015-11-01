@@ -19,6 +19,7 @@ angular.module('geometric', [ 'toolbar', 'gcanvas', 'infobar', 'handler' ])
                 mouse.x = e.pageX - offset.left
                 mouse.y = e.pageY - offset.top
                 mouse.button = e.which
+                mouse.dirty = true
 
                 if mouse.button == 2 # middle maybe
                     plane.translation.x += mouse.x - mouse.px
@@ -29,6 +30,9 @@ angular.module('geometric', [ 'toolbar', 'gcanvas', 'infobar', 'handler' ])
                     if pts.length > 0 and pts[0]._dist <= 9 and pts[0].isUndependant()
                         pts[0].x = snapper.x
                         pts[0].y = snapper.y
+
+            $(document).mousedown (e) ->
+                
 
             mouse.vw = $('.gcanvas').width()
             mouse.vh = $('.gcanvas').height()

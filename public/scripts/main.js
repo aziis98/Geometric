@@ -19,6 +19,7 @@ angular.module('geometric', ['toolbar', 'gcanvas', 'infobar', 'handler']).contro
       mouse.x = e.pageX - offset.left;
       mouse.y = e.pageY - offset.top;
       mouse.button = e.which;
+      mouse.dirty = true;
       if (mouse.button === 2) {
         plane.translation.x += mouse.x - mouse.px;
         plane.translation.y += mouse.y - mouse.py;
@@ -33,6 +34,7 @@ angular.module('geometric', ['toolbar', 'gcanvas', 'infobar', 'handler']).contro
         }
       }
     });
+    $(document).mousedown(function(e) {});
     mouse.vw = $('.gcanvas').width();
     return mouse.vh = $('.gcanvas').height();
   });
