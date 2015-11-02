@@ -15,3 +15,27 @@ body {
 span {
     cursor: default;
 }
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-border-radius: 10px;
+    background-color: @ui-borders;
+    border-radius: 10px;
+    margin: 5px 0px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: @ui-borders - #333;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+
+}

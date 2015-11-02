@@ -15,12 +15,20 @@ exports.PPlane = PPlane = (function() {
     ref = this.primitives;
     for (i = 0, len = ref.length; i < len; i++) {
       primitive = ref[i];
-      primitive.render(g);
+      if (primitive.options.visible) {
+        primitive.render(g);
+        if (primitive.options.hover || primitive.options.selected) {
+          primitive.highLight(g);
+        }
+      }
     }
   };
 
   PPlane.prototype.addPrimitive = function(primitive) {
-    return this.primitives.push(primitive);
+    this.primitives.push(primitive);
+    return primitive.options.name = primitive.typename.slice(1).toLowerCase() + (this.primitives.filter(function(p) {
+      return primitive.typename === p.typename;
+    }).length);
   };
 
   PPlane.prototype.getClosestTo = function(x, y) {
@@ -45,7 +53,9 @@ exports.PPoint = PPoint = (function() {
     this.x = x1;
     this.y = y1;
     this.typename = 'PPoint';
-    this.renderer = '';
+    this.options = {
+      visible: true
+    };
     this.color = '#000000';
     this.nosnap = false;
   }
@@ -127,7 +137,9 @@ exports.PPoint = PPoint = (function() {
 exports.PLine = PLine = (function() {
   function PLine(a, b, c) {
     this.typename = 'PLine';
-    this.renderer = '';
+    this.options = {
+      visible: true
+    };
     this.color = '#000000';
     if (a.typename === 'PPoint') {
       this.a = function() {
@@ -219,7 +231,9 @@ exports.PLine = PLine = (function() {
 exports.PCircle = PCircle = (function() {
   function PCircle(center, other) {
     this.typename = 'PCircle';
-    this.renderer = '';
+    this.options = {
+      visible: true
+    };
     this.color = '#000000';
     this.center = center;
     this.radius = function() {

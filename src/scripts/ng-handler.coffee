@@ -42,7 +42,7 @@ angular.module('handler', [])
             @pure.y = mouse.y - plane.translation.y
 
             ptsX = plane.primitives
-                .filter((p) -> p.typename is 'PPoint')
+                .filter((p) -> p.typename is 'PPoint' and p.options.visible)
                 .map((p) -> { obj: p, dist: Math.abs(p.getX() - (mouse.x - plane.translation.x)) })
                 .sort((a, b) -> a.dist - b.dist)
 
@@ -55,7 +55,7 @@ angular.module('handler', [])
                     })
 
             ptsY = plane.primitives
-                .filter((p) -> p.typename is 'PPoint')
+                .filter((p) -> p.typename is 'PPoint' and p.options.visible)
                 .map((p) -> { obj: p, dist: Math.abs(p.getY() - (mouse.y - plane.translation.y)) })
                 .sort((a, b) -> a.dist - b.dist)
 
@@ -96,7 +96,7 @@ angular.module('handler', [])
 
         @['none'] = {
             doHighlight: (primitive) ->
-                return forPoint(primitive)
+                return forPoint(primitive) or forLine(primitive) or forCircle(primitive)
         }
 
         @['point'] = {

@@ -121,7 +121,7 @@ angular.module('geometric', ['toolbar', 'gcanvas', 'structure', 'infobar', 'hand
         pts = tool.nearList.filter(function(primitive) {
           return primitive.typename === 'PPoint';
         });
-        if (pts.length > 0 && pts[0]._dist <= 9 && pts[0].isUndependant()) {
+        if (pts.length > 0 && pts[0]._dist <= 9 && pts[0].isUndependant() && pts[0].options.visible) {
           tool.dragging = true;
           return tool.dragged = pts[0];
         }

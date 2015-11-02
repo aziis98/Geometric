@@ -35,7 +35,7 @@ angular.module('handler', []).value('plane', new PPlane()).value('tool', {
     this.pure.x = mouse.x - plane.translation.x;
     this.pure.y = mouse.y - plane.translation.y;
     ptsX = plane.primitives.filter(function(p) {
-      return p.typename === 'PPoint';
+      return p.typename === 'PPoint' && p.options.visible;
     }).map(function(p) {
       return {
         obj: p,
@@ -54,7 +54,7 @@ angular.module('handler', []).value('plane', new PPlane()).value('tool', {
       }
     }
     ptsY = plane.primitives.filter(function(p) {
-      return p.typename === 'PPoint';
+      return p.typename === 'PPoint' && p.options.visible;
     }).map(function(p) {
       return {
         obj: p,
@@ -116,7 +116,7 @@ angular.module('handler', []).value('plane', new PPlane()).value('tool', {
   };
   this['none'] = {
     doHighlight: function(primitive) {
-      return forPoint(primitive);
+      return forPoint(primitive) || forLine(primitive) || forCircle(primitive);
     }
   };
   this['point'] = {

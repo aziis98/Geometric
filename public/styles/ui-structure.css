@@ -2,4 +2,47 @@
   position: absolute;
   top: 0px;
   right: 0px;
+  background-color: white;
+  width: 20vw;
+  bottom: 27px;
+  border-left: 1px solid #dadada;
+  box-sizing: border-box;
+  padding: 2px 0 0 0;
+}
+.structure .pane {
+  height: calc(50vh - 18px);
+  margin: 0px 5px;
+}
+.structure .pane .listview {
+  overflow: auto;
+  height: calc(50vh - 50px);
+}
+.structure .pane *.title {
+  font-size: 130%;
+  border-bottom: 1px solid #dadada;
+  border-top: 1px solid #dadada;
+  text-align: center;
+}
+.structure .pane *.listview .item:hover {
+  background-color: #eaeaea;
+}
+.structure .pane *.listview .item.selected {
+  background-color: #e0e0e0;
+}
+.structure .pane *.listview .item .label {
+  cursor: pointer;
+}
+.structure .pane *.listview .item .options {
+  float: right;
+  height: 15px;
+  cursor: pointer;
+}
+.material-icons {
+  color: #8a8a8a;
+}
+.material-icons.md-eye {
+  font-size: 17px;
+}
+.material-icons.md-del {
+  font-size: 20px;
 }

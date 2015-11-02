@@ -106,7 +106,7 @@ angular.module('geometric', [ 'toolbar', 'gcanvas', 'structure', 'infobar', 'han
 
                 if mouse.button == 3
                     pts = tool.nearList.filter (primitive) -> primitive.typename is 'PPoint'
-                    if pts.length > 0 and pts[0]._dist <= 9 and pts[0].isUndependant()
+                    if pts.length > 0 and pts[0]._dist <= 9 and pts[0].isUndependant() and pts[0].options.visible
                         tool.dragging = true
                         tool.dragged = pts[0]
 

@@ -1,9 +1,27 @@
-<div>
+<div class="pane">
     <div class="title">Listview</div>
-    <div ng-repeat="primitive in primitives">
-        <span class="label">{{primitive.typename}}</span>
-        <span class="options">
 
-        </span>
+    <div class="listview">
+        <div class="item"
+            ng-class="{selected: primitive.options.selected}"
+            ng-repeat="primitive in primitives"
+            ng-mouseenter="primitive.options.hover = true"
+            ng-mouseleave="primitive.options.hover = false">
+
+            <span class="label"
+                ng-click="select($index)">
+                {{primitive.options.name}}
+            </span>
+            <span class="options">
+                <i class="material-icons md-eye"
+                    ng-click="primitive.options.visible = !primitive.options.visible">
+                    {{primitive.options.visible ? 'visibility' : 'visibility_off'}}
+                </i>
+                <i class="material-icons md-del"
+                    ng-click="primitive.options.remove = true; plane.removeDirty = true;">
+                    delete
+                </i>
+            </span>
+        </div>
     </div>
 </div>

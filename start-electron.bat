@@ -1,2 +1,2 @@
 @echo off
-electron .
+npm start

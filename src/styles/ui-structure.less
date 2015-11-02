@@ -4,4 +4,60 @@
     position: absolute;
     top: 0px;
     right: 0px;
+    background-color: @ui-pane;
+    width: 20vw;
+    bottom: 27px;
+    border-left: 1px solid @ui-borders;
+    box-sizing: border-box;
+    padding: 2px 0 0 0;
+
+    .pane {
+        // border-bottom: 1px solid @ui-borders;
+        height: calc(~"50vh - 18px");
+        margin: 0px 5px;
+
+        .listview {
+            overflow: auto;
+            height: calc(~"50vh - 50px");
+        }
+
+        *.title {
+            font-size: 130%;
+            border-bottom: 1px solid @ui-borders;
+            border-top: 1px solid @ui-borders;
+            text-align: center;
+        }
+
+        *.listview {
+            .item {
+                &:hover {
+                    background-color: @ui-hover;
+                }
+
+                &.selected {
+                    background-color: @ui-selection;
+                }
+
+                .label {
+                    cursor: pointer;
+                }
+
+                .options {
+                    float: right;
+                    height: 15px;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+.material-icons {
+    color: #8a8a8a;
+    &.md-eye {
+        font-size: 17px;
+    }
+    &.md-del {
+        font-size: 20px;
+    }
 }

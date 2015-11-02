@@ -8,11 +8,15 @@ exports.PPlane = class PPlane
 
     render: (g) ->
         for primitive in @primitives
-            primitive.render g
+            if primitive.options.visible
+                primitive.render g
+                if primitive.options.hover or primitive.options.selected
+                    primitive.highLight g
         return
 
     addPrimitive: (primitive) ->
         @primitives.push primitive
+        primitive.options.name = primitive.typename[1..].toLowerCase() + (@primitives.filter((p) -> primitive.typename is p.typename).length)
 
     getClosestTo: (x, y) ->
         bf = @primitives.slice()
@@ -28,7 +32,7 @@ exports.PPlane = class PPlane
 exports.PPoint = class PPoint
     constructor: (@x, @y) ->
         @typename = 'PPoint'
-        @renderer = ''
+        @options = { visible: true }
         @color = '#000000'
         @nosnap = false
 
@@ -89,7 +93,7 @@ exports.PPoint = class PPoint
 exports.PLine = class PLine
     constructor: (a, b, c) ->
         @typename = 'PLine'
-        @renderer = ''
+        @options = { visible: true }
         @color = '#000000'
 
         if a.typename is 'PPoint'
@@ -152,7 +156,7 @@ exports.PLine = class PLine
 exports.PCircle = class PCircle
     constructor: (center, other) ->
         @typename = 'PCircle'
-        @renderer = ''
+        @options = { visible: true }
         @color = '#000000'
 
         @center = center

@@ -9,3 +9,20 @@ body {
 span {
   cursor: default;
 }
+/* Let's get this party started */
+::-webkit-scrollbar {
+  width: 5px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  -webkit-border-radius: 10px;
+  background-color: #dadada;
+  border-radius: 10px;
+  margin: 5px 0px;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: #a7a7a7;
+}

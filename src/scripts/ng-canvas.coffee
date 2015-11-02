@@ -35,8 +35,11 @@ angular.module('gcanvas', [ 'handler' ])
                 g.fillRect(0, 0, g.viewport.width, g.viewport.height)
 
                 # update
+                if plane.removeDirty
+                    plane.primitives = plane.primitives.filter((p) -> !p.options.remove)
+                    plane.removeDirty = false
 
-                tool.nearList = plane.getClosestTo(mouse.x - plane.translation.x, mouse.y - plane.translation.y)
+                tool.nearList = plane.getClosestTo(mouse.x - plane.translation.x, mouse.y - plane.translation.y).filter((p) -> p.options.visible)
 
                 if tool.id != 'none'
                     snapper.updateGuides()
@@ -49,11 +52,12 @@ angular.module('gcanvas', [ 'handler' ])
                 if tool.preview
                     tool.preview.render g
 
-                snapper.renderGuides g
+                if !tool.dragged?.nosnap
+                    snapper.renderGuides g
 
-                for primitive in plane.primitives.slice().sort((a, b) -> a.typename.localeCompare(b.typename))
-                    if toolhandler[tool.id].doHighlight(primitive)
-                        primitive.highLight g
+                hprs = tool.nearList[..].sort((a, b) -> -a.typename.localeCompare(b.typename)).filter toolhandler[tool.id].doHighlight
+                if hprs.length > 0 and hprs[0].options.visible
+                    hprs[0].highLight g
 
                 g.translate(-plane.translation.x, -plane.translation.y)
 

@@ -35,11 +35,19 @@ angular.module('gcanvas', ['handler']).directive('geometricCanvas', function() {
         });
       };
       render = function(g) {
-        var i, len, primitive, ref;
+        var hprs, ref;
         g.ctx.clearRect(0, 0, g.viewport.width, g.viewport.height);
         g.setColor(plane.background);
         g.fillRect(0, 0, g.viewport.width, g.viewport.height);
-        tool.nearList = plane.getClosestTo(mouse.x - plane.translation.x, mouse.y - plane.translation.y);
+        if (plane.removeDirty) {
+          plane.primitives = plane.primitives.filter(function(p) {
+            return !p.options.remove;
+          });
+          plane.removeDirty = false;
+        }
+        tool.nearList = plane.getClosestTo(mouse.x - plane.translation.x, mouse.y - plane.translation.y).filter(function(p) {
+          return p.options.visible;
+        });
         if (tool.id !== 'none') {
           snapper.updateGuides();
         }
@@ -48,15 +56,14 @@ angular.module('gcanvas', ['handler']).directive('geometricCanvas', function() {
         if (tool.preview) {
           tool.preview.render(g);
         }
-        snapper.renderGuides(g);
-        ref = plane.primitives.slice().sort(function(a, b) {
-          return a.typename.localeCompare(b.typename);
-        });
-        for (i = 0, len = ref.length; i < len; i++) {
-          primitive = ref[i];
-          if (toolhandler[tool.id].doHighlight(primitive)) {
-            primitive.highLight(g);
-          }
+        if (!((ref = tool.dragged) != null ? ref.nosnap : void 0)) {
+          snapper.renderGuides(g);
+        }
+        hprs = tool.nearList.slice(0).sort(function(a, b) {
+          return -a.typename.localeCompare(b.typename);
+        }).filter(toolhandler[tool.id].doHighlight);
+        if (hprs.length > 0 && hprs[0].options.visible) {
+          hprs[0].highLight(g);
         }
         g.translate(-plane.translation.x, -plane.translation.y);
         if (tool.id !== 'none') {
