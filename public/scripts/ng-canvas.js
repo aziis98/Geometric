@@ -12,11 +12,17 @@ angular.module('gcanvas', ['handler']).directive('geometricCanvas', function() {
       var render;
       $scope.onClick = function() {
         if (toolhandler[tool.id].handler) {
-          return tool.id = toolhandler[tool.id].handler();
+          tool.id = toolhandler[tool.id].handler();
+          if (tool.id === 'none') {
+            return tool.preview = void 0;
+          }
         }
       };
       $rootScope.$on('actionComplete', function() {
-        return console.log('actionComplete() in canvas');
+        if (toolhandler[tool.id].doComplete) {
+          tool.id = toolhandler[tool.id].doComplete();
+          return tool.preview = void 0;
+        }
       });
       $scope.getGraphics = function() {
         var theCanvas;
@@ -31,15 +37,18 @@ angular.module('gcanvas', ['handler']).directive('geometricCanvas', function() {
       render = function(g) {
         var i, len, primitive, ref;
         g.ctx.clearRect(0, 0, g.viewport.width, g.viewport.height);
-        if (mouse.dirty) {
-          mouse.x -= plane.translation.x;
-          mouse.y -= plane.translation.y;
-          mouse.dirty = false;
+        g.setColor(plane.background);
+        g.fillRect(0, 0, g.viewport.width, g.viewport.height);
+        tool.nearList = plane.getClosestTo(mouse.x - plane.translation.x, mouse.y - plane.translation.y);
+        if (tool.id !== 'none') {
+          snapper.updateGuides();
         }
-        tool.nearList = plane.getClosestTo(mouse.x, mouse.y);
-        snapper.updateGuides();
         g.translate(plane.translation.x, plane.translation.y);
         plane.render(g);
+        if (tool.preview) {
+          tool.preview.render(g);
+        }
+        snapper.renderGuides(g);
         ref = plane.primitives.slice().sort(function(a, b) {
           return a.typename.localeCompare(b.typename);
         });
@@ -49,7 +58,6 @@ angular.module('gcanvas', ['handler']).directive('geometricCanvas', function() {
             primitive.highLight(g);
           }
         }
-        snapper.renderGuides(g);
         g.translate(-plane.translation.x, -plane.translation.y);
         if (tool.id !== 'none') {
           g.setColor('#000000');

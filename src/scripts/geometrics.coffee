@@ -4,6 +4,7 @@ exports.PPlane = class PPlane
     constructor: ->
         @primitives = []
         @translation = { x: 0, y: 0 }
+        @background = '#e8e8e8'
 
     render: (g) ->
         for primitive in @primitives
@@ -27,10 +28,12 @@ exports.PPlane = class PPlane
 exports.PPoint = class PPoint
     constructor: (@x, @y) ->
         @typename = 'PPoint'
-        @selected = false
+        @renderer = ''
+        @color = '#000000'
+        @nosnap = false
 
     render: (g) ->
-        g.setColor '#000000'
+        g.setColor @color
         g.drawCircle @getX(), @getY(), 5
         g.fillCircle @getX(), @getY(), 3
 
@@ -72,10 +75,23 @@ exports.PPoint = class PPoint
             )
         )
 
+    @getMidpoint: (a, b) ->
+        return @getCentroid([a, b])
+
+    @getLineLink: (line, ctrlPt) ->
+        ctrlPt.color = '#0000FF'
+        ctrlPt.nosnap = true
+        p1 = PLine.getPerpendicular(line, ctrlPt)
+        return PLine.getIntersection(p1, line)
+
+
+
 exports.PLine = class PLine
     constructor: (a, b, c) ->
         @typename = 'PLine'
-        @selected = false
+        @renderer = ''
+        @color = '#000000'
+
         if a.typename is 'PPoint'
             @a = -> b.getY() - a.getY()
             @b = -> a.getX() - b.getX()
@@ -96,7 +112,7 @@ exports.PLine = class PLine
         @_x1 = (@_c - @_b * (@_ty)) / @_a
         @_x2 = (@_c - @_b * (@_ty + g.viewport.height)) / @_a
 
-        g.setColor('#000000')
+        g.setColor @color
         if @_a != 0
             g.drawLine(@_x1, @_ty, @_x2, @_ty + g.viewport.height)
         else
@@ -123,16 +139,70 @@ exports.PLine = class PLine
             (-> pt.getX() * line.b() - pt.getY() * line.a())
         )
 
+    @getParallel: (line, pt) ->
+        return new PLine(line.a, line.b,
+            (-> pt.getX() * line.a() + pt.getY() * line.b())
+        )
+
     @getIntersection: (l1, l2) ->
         fx = -> - (l2.b() * l1.c() - l1.b() * l2.c()) / (l2.a() * l1.b() - l1.a() * l2.b())
         fy = -> - (l1.a() * l2.c() - l2.a() * l1.c()) / (l2.a() * l1.b() - l1.a() * l2.b())
         return new PPoint(fx, fy)
 
+exports.PCircle = class PCircle
+    constructor: (center, other) ->
+        @typename = 'PCircle'
+        @renderer = ''
+        @color = '#000000'
 
+        @center = center
+        @radius = -> center.distance(other.getX(), other.getY())
 
+    render: (g) ->
+        g.setColor @color
+        g.drawCircle @center.getX(), @center.getY(), @radius()
+    highLight: (g) ->
+        g.setColor('#ff8080')
+        g.setLineWidth(2)
+        g.drawCircle @center.getX(), @center.getY(), @radius()
+        g.setLineWidth(1)
 
+    isUndependant: -> false
 
+    distance: (x, y) ->
+        return Math.abs(@center.distance(x, y) - @radius())
 
+    @getOrthoCircle: (a, b, c) ->
+        l1 = new PLine(a, b)
+        l2 = new PLine(b, c)
+        p1 = PLine.getPerpendicular(l1, PPoint.getMidpoint(a, b))
+        p2 = PLine.getPerpendicular(l2, PPoint.getMidpoint(b, c))
+        return PLine.getIntersection(p1, p2)
+
+    @addOrthoCenter: (plane, a, b, c) ->
+        center = @getOrthoCircle(a, b, c)
+        plane.addPrimitive center
+        plane.addPrimitive new PCircle(center, a)
+
+    @getTangentLine: (circle, point) ->
+        l1 = new PLine(circle.center, point)
+        return PLine.getPerpendicular(l1, point)
+
+    @getLineCircleIntersection: (circle, line) ->
+        mid = PLine.getIntersection(PLine.getPerpendicular(line, circle.center), line)
+        centermid = -> circle.center.distance(mid.getX(), mid.getY())
+        v = -> Math.sqrt(circle.radius() * circle.radius() - centermid() * centermid())
+        a2b2 = -> Math.sqrt(line.a() * line.a() + line.b() * line.b() )
+        n = -> {
+            x: (line.b() / a2b2() )
+            y: ( -line.a() / a2b2() )
+        }
+        ix1 = -> n().x * v() + mid.getX()
+        iy1 = -> n().y * v() + mid.getY()
+
+        ix2 = -> -n().x * v() + mid.getX()
+        iy2 = -> -n().y * v() + mid.getY()
+        return [new PPoint(ix1, iy1), new PPoint(ix2, iy2)]
 
 
 

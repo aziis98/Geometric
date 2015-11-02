@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="public/styles/ui-toolbar.css">
         <link rel="stylesheet" href="public/styles/ui-canvas.css">
         <link rel="stylesheet" href="public/styles/ui-infobar.css">
+        <link rel="stylesheet" href="public/styles/ui-structure.css">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
 
@@ -16,6 +17,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
 
         <script src="public/scripts/ng-handler.js"></script>
+        <script src="public/scripts/ng-structure.js"></script>
         <script src="public/scripts/ng-toolbar.js"></script>
         <script src="public/scripts/ng-infobar.js"></script>
         <script src="public/scripts/ng-canvas.js"></script>
@@ -28,6 +30,11 @@
                     icon="assets/tools/point.png"
                     label="Point"
                     tool="point">
+                </toolitem>
+                <toolitem
+                    icon="assets/tools/point-dep-line.png"
+                    label="Line Dependant"
+                    tool="point-dep-line:line">
                 </toolitem>
                 <toolitem
                     icon="assets/tools/point-centroid.png"
@@ -44,24 +51,47 @@
                 <toolitem
                     icon="assets/tools/line-parallel.png"
                     label="Parallel"
-                    tool="line-parallel">
+                    tool="line-parallel:line">
                 </toolitem>
                 <toolitem
                     icon="assets/tools/line-perpendicular.png"
                     label="Perpendicular"
-                    tool="line-perpendicular">
+                    tool="line-perpendicular:line">
+                </toolitem>
+                <toolitem
+                    icon="assets/tools/line-intersection.png"
+                    label="Line Intersection"
+                    tool="line-intersection:a">
+                </toolitem>
+            </toolgroup>
+            <toolgroup groupicon="assets/tools/circle.png">
+                <toolitem
+                    icon="assets/tools/circle.png"
+                    label="Circle"
+                    tool="circle:center">
+                </toolitem>
+                <toolitem
+                    icon="assets/tools/circle-orthocenter.png"
+                    label="Circle Orthocenter"
+                    tool="circle-orthocenter:A">
+                </toolitem>
+                <toolitem
+                    icon="assets/tools/circle-tangent.png"
+                    label="Circle Tangent"
+                    tool="circle-tangent:circle">
+                </toolitem>
+                <toolitem
+                    icon="assets/tools/circle-intersection-line.png"
+                    label="Line Intersection"
+                    tool="circle-intersection-line:circle">
                 </toolitem>
             </toolgroup>
         </toolbar>
 
-        <!-- <structure>
-            <pane title="Element View">
-
-            </pane>
-            <pane title="Properties">
-
-            </pane>
-        </structure> -->
+        <structure>
+            <pane-listview></pane-listview>
+            <pane-properties></pane-properties>
+        </structure>
 
         <geometric-canvas></geometric-canvas>
 

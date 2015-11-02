@@ -14,9 +14,13 @@ angular.module('gcanvas', [ 'handler' ])
             $scope.onClick = ->
                 if toolhandler[tool.id].handler
                     tool.id = toolhandler[tool.id].handler()
+                    if tool.id is 'none'
+                        tool.preview = undefined
 
             $rootScope.$on 'actionComplete', ->
-                console.log 'actionComplete() in canvas'
+                if toolhandler[tool.id].doComplete
+                    tool.id = toolhandler[tool.id].doComplete()
+                    tool.preview = undefined
 
             $scope.getGraphics = ->
                 theCanvas = $('#canvas')[0]
@@ -27,27 +31,29 @@ angular.module('gcanvas', [ 'handler' ])
             render = (g) ->
                 g.ctx.clearRect(0, 0, g.viewport.width, g.viewport.height)
 
+                g.setColor(plane.background)
+                g.fillRect(0, 0, g.viewport.width, g.viewport.height)
+
                 # update
 
-                if mouse.dirty
-                    mouse.x -= plane.translation.x
-                    mouse.y -= plane.translation.y
-                    mouse.dirty = false
+                tool.nearList = plane.getClosestTo(mouse.x - plane.translation.x, mouse.y - plane.translation.y)
 
-                tool.nearList = plane.getClosestTo(mouse.x, mouse.y)
-
-                snapper.updateGuides()
+                if tool.id != 'none'
+                    snapper.updateGuides()
 
                 # render
                 g.translate(plane.translation.x, plane.translation.y)
 
                 plane.render g
 
+                if tool.preview
+                    tool.preview.render g
+
+                snapper.renderGuides g
+
                 for primitive in plane.primitives.slice().sort((a, b) -> a.typename.localeCompare(b.typename))
                     if toolhandler[tool.id].doHighlight(primitive)
                         primitive.highLight g
-
-                snapper.renderGuides g
 
                 g.translate(-plane.translation.x, -plane.translation.y)
 

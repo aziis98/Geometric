@@ -1,4 +1,4 @@
-var PLine, PPlane, PPoint;
+var PCircle, PLine, PPlane, PPoint;
 
 exports.PPlane = PPlane = (function() {
   function PPlane() {
@@ -7,6 +7,7 @@ exports.PPlane = PPlane = (function() {
       x: 0,
       y: 0
     };
+    this.background = '#e8e8e8';
   }
 
   PPlane.prototype.render = function(g) {
@@ -44,11 +45,13 @@ exports.PPoint = PPoint = (function() {
     this.x = x1;
     this.y = y1;
     this.typename = 'PPoint';
-    this.selected = false;
+    this.renderer = '';
+    this.color = '#000000';
+    this.nosnap = false;
   }
 
   PPoint.prototype.render = function(g) {
-    g.setColor('#000000');
+    g.setColor(this.color);
     g.drawCircle(this.getX(), this.getY(), 5);
     return g.fillCircle(this.getX(), this.getY(), 3);
   };
@@ -105,6 +108,18 @@ exports.PPoint = PPoint = (function() {
     }));
   };
 
+  PPoint.getMidpoint = function(a, b) {
+    return this.getCentroid([a, b]);
+  };
+
+  PPoint.getLineLink = function(line, ctrlPt) {
+    var p1;
+    ctrlPt.color = '#0000FF';
+    ctrlPt.nosnap = true;
+    p1 = PLine.getPerpendicular(line, ctrlPt);
+    return PLine.getIntersection(p1, line);
+  };
+
   return PPoint;
 
 })();
@@ -112,7 +127,8 @@ exports.PPoint = PPoint = (function() {
 exports.PLine = PLine = (function() {
   function PLine(a, b, c) {
     this.typename = 'PLine';
-    this.selected = false;
+    this.renderer = '';
+    this.color = '#000000';
     if (a.typename === 'PPoint') {
       this.a = function() {
         return b.getY() - a.getY();
@@ -140,7 +156,7 @@ exports.PLine = PLine = (function() {
     }
     this._x1 = (this._c - this._b * this._ty) / this._a;
     this._x2 = (this._c - this._b * (this._ty + g.viewport.height)) / this._a;
-    g.setColor('#000000');
+    g.setColor(this.color);
     if (this._a !== 0) {
       return g.drawLine(this._x1, this._ty, this._x2, this._ty + g.viewport.height);
     } else {
@@ -179,6 +195,12 @@ exports.PLine = PLine = (function() {
     }));
   };
 
+  PLine.getParallel = function(line, pt) {
+    return new PLine(line.a, line.b, (function() {
+      return pt.getX() * line.a() + pt.getY() * line.b();
+    }));
+  };
+
   PLine.getIntersection = function(l1, l2) {
     var fx, fy;
     fx = function() {
@@ -191,5 +213,95 @@ exports.PLine = PLine = (function() {
   };
 
   return PLine;
+
+})();
+
+exports.PCircle = PCircle = (function() {
+  function PCircle(center, other) {
+    this.typename = 'PCircle';
+    this.renderer = '';
+    this.color = '#000000';
+    this.center = center;
+    this.radius = function() {
+      return center.distance(other.getX(), other.getY());
+    };
+  }
+
+  PCircle.prototype.render = function(g) {
+    g.setColor(this.color);
+    return g.drawCircle(this.center.getX(), this.center.getY(), this.radius());
+  };
+
+  PCircle.prototype.highLight = function(g) {
+    g.setColor('#ff8080');
+    g.setLineWidth(2);
+    g.drawCircle(this.center.getX(), this.center.getY(), this.radius());
+    return g.setLineWidth(1);
+  };
+
+  PCircle.prototype.isUndependant = function() {
+    return false;
+  };
+
+  PCircle.prototype.distance = function(x, y) {
+    return Math.abs(this.center.distance(x, y) - this.radius());
+  };
+
+  PCircle.getOrthoCircle = function(a, b, c) {
+    var l1, l2, p1, p2;
+    l1 = new PLine(a, b);
+    l2 = new PLine(b, c);
+    p1 = PLine.getPerpendicular(l1, PPoint.getMidpoint(a, b));
+    p2 = PLine.getPerpendicular(l2, PPoint.getMidpoint(b, c));
+    return PLine.getIntersection(p1, p2);
+  };
+
+  PCircle.addOrthoCenter = function(plane, a, b, c) {
+    var center;
+    center = this.getOrthoCircle(a, b, c);
+    plane.addPrimitive(center);
+    return plane.addPrimitive(new PCircle(center, a));
+  };
+
+  PCircle.getTangentLine = function(circle, point) {
+    var l1;
+    l1 = new PLine(circle.center, point);
+    return PLine.getPerpendicular(l1, point);
+  };
+
+  PCircle.getLineCircleIntersection = function(circle, line) {
+    var a2b2, centermid, ix1, ix2, iy1, iy2, mid, n, v;
+    mid = PLine.getIntersection(PLine.getPerpendicular(line, circle.center), line);
+    centermid = function() {
+      return circle.center.distance(mid.getX(), mid.getY());
+    };
+    v = function() {
+      return Math.sqrt(circle.radius() * circle.radius() - centermid() * centermid());
+    };
+    a2b2 = function() {
+      return Math.sqrt(line.a() * line.a() + line.b() * line.b());
+    };
+    n = function() {
+      return {
+        x: line.b() / a2b2(),
+        y: -line.a() / a2b2()
+      };
+    };
+    ix1 = function() {
+      return n().x * v() + mid.getX();
+    };
+    iy1 = function() {
+      return n().y * v() + mid.getY();
+    };
+    ix2 = function() {
+      return -n().x * v() + mid.getX();
+    };
+    iy2 = function() {
+      return -n().y * v() + mid.getY();
+    };
+    return [new PPoint(ix1, iy1), new PPoint(ix2, iy2)];
+  };
+
+  return PCircle;
 
 })();
