@@ -10,7 +10,8 @@ angular.module('handler', []).value('plane', new PPlane()).value('tool', {
   },
   dragging: false,
   dragged: void 0,
-  preview: void 0
+  preview: void 0,
+  selectedPrimitive: void 0
 }).value('mouse', {
   x: 0,
   y: 0,
@@ -19,6 +20,12 @@ angular.module('handler', []).value('plane', new PPlane()).value('tool', {
   button: 0,
   vw: 1920,
   vh: 1080
+}).filter('titlecase', function() {
+  return function(input) {
+    return input.replace(/\w\S*/g, function(txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+  };
 }).service('snapper', function(mouse, plane, tool) {
   this.x = 0;
   this.y = 0;

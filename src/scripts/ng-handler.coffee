@@ -11,6 +11,7 @@ angular.module('handler', [])
         dragging: false
         dragged: undefined
         preview: undefined
+        selectedPrimitive: undefined
     }
 
     .value 'mouse', {
@@ -22,6 +23,11 @@ angular.module('handler', [])
         vw: 1920
         vh: 1080
     }
+
+    .filter 'titlecase', ->
+        (input) ->
+            input.replace /\w\S*/g, (txt) -> txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase() 
+
 
     .service 'snapper', (mouse, plane, tool) ->
         @x = 0

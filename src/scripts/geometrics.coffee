@@ -10,7 +10,7 @@ exports.PPlane = class PPlane
         for primitive in @primitives
             if primitive.options.visible
                 primitive.render g
-                if primitive.options.hover or primitive.options.selected
+                if primitive.options.hover # or primitive.options.selected
                     primitive.highLight g
         return
 
@@ -32,12 +32,20 @@ exports.PPlane = class PPlane
 exports.PPoint = class PPoint
     constructor: (@x, @y) ->
         @typename = 'PPoint'
-        @options = { visible: true }
-        @color = '#000000'
+        @options =
+            visible: true
+            hover: false
+            selected: false
+            name: '???'
+        @renderer =
+            flagColor:
+                type: 'color'
+                color: '#000000'
         @nosnap = false
 
     render: (g) ->
-        g.setColor @color
+        g.setColor @renderer.flagColor.color
+        g.setLineWidth 1
         g.drawCircle @getX(), @getY(), 5
         g.fillCircle @getX(), @getY(), 3
 
@@ -83,7 +91,7 @@ exports.PPoint = class PPoint
         return @getCentroid([a, b])
 
     @getLineLink: (line, ctrlPt) ->
-        ctrlPt.color = '#0000FF'
+        ctrlPt.renderer.flagColor.color = '#0000FF'
         ctrlPt.nosnap = true
         p1 = PLine.getPerpendicular(line, ctrlPt)
         return PLine.getIntersection(p1, line)
@@ -93,8 +101,16 @@ exports.PPoint = class PPoint
 exports.PLine = class PLine
     constructor: (a, b, c) ->
         @typename = 'PLine'
-        @options = { visible: true }
-        @color = '#000000'
+        @options =
+            visible: true
+            hover: false
+            selected: false
+            name: '???'
+        @renderer =
+            color:
+                type: 'color'
+                color: '#000000'
+                alpha: 1.0
 
         if a.typename is 'PPoint'
             @a = -> b.getY() - a.getY()
@@ -116,7 +132,8 @@ exports.PLine = class PLine
         @_x1 = (@_c - @_b * (@_ty)) / @_a
         @_x2 = (@_c - @_b * (@_ty + g.viewport.height)) / @_a
 
-        g.setColor @color
+        g.setColor @renderer.color.color
+        g.ctx.globalAlpha = @renderer.color.alpha
         if @_a != 0
             g.drawLine(@_x1, @_ty, @_x2, @_ty + g.viewport.height)
         else
@@ -156,14 +173,35 @@ exports.PLine = class PLine
 exports.PCircle = class PCircle
     constructor: (center, other) ->
         @typename = 'PCircle'
-        @options = { visible: true }
-        @color = '#000000'
+        @options =
+            visible: true
+            hover: false
+            selected: false
+            name: '???'
+        @renderer =
+            border:
+                type: 'color'
+                color: '#000000'
+                alpha: 1.0
+            fill:
+                type: 'color'
+                color: 'transparent'
+                alpha: 1.0
+            borderWidth:
+                type: 'number'
+                value: 1.0
 
         @center = center
         @radius = -> center.distance(other.getX(), other.getY())
 
     render: (g) ->
-        g.setColor @color
+        g.setColor @renderer.fill.color
+        g.ctx.globalAlpha = @renderer.fill.alpha
+        g.fillCircle @center.getX(), @center.getY(), @radius()
+
+        g.setLineWidth @renderer.borderWidth.value
+        g.setColor @renderer.border.color
+        g.ctx.globalAlpha = @renderer.border.alpha
         g.drawCircle @center.getX(), @center.getY(), @radius()
     highLight: (g) ->
         g.setColor('#ff8080')

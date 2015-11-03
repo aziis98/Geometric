@@ -13,29 +13,71 @@
   height: calc(50vh - 18px);
   margin: 0px 5px;
 }
-.structure .pane .listview {
-  overflow: auto;
-  height: calc(50vh - 50px);
-}
-.structure .pane *.title {
+.structure .pane .title {
   font-size: 130%;
   border-bottom: 1px solid #dadada;
   border-top: 1px solid #dadada;
   text-align: center;
 }
-.structure .pane *.listview .item:hover {
+.structure .pane .view {
+  overflow: auto;
+  height: calc(50vh - 50px);
+}
+.structure .pane .list .item:hover {
   background-color: #eaeaea;
 }
-.structure .pane *.listview .item.selected {
+.structure .pane .list .item.selected {
   background-color: #e0e0e0;
 }
-.structure .pane *.listview .item .label {
+.structure .pane .list .item .label {
   cursor: pointer;
 }
-.structure .pane *.listview .item .options {
+.structure .pane .list .item .options {
   float: right;
   height: 15px;
   cursor: pointer;
+}
+.structure .pane .properties {
+  padding: 0px 10px;
+  font-size: 110%;
+}
+.structure .pane .properties .typename {
+  text-align: center;
+  padding: 10px 0px;
+  box-sizing: border-box;
+  display: block;
+}
+.structure .pane .properties .typename input[type=text] {
+  font-size: 120%;
+  text-align: center;
+}
+.structure .pane .properties table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.structure .pane .properties tr,
+.structure .pane .properties td,
+.structure .pane .properties th {
+  text-align: left;
+  border-top: 1px solid #dadada;
+  border-bottom: 1px solid #dadada;
+}
+.structure .pane .properties tr .key,
+.structure .pane .properties td .key,
+.structure .pane .properties th .key {
+  width: 7vw;
+}
+.structure .pane .properties th {
+  font-weight: lighter;
+}
+input[type=text] {
+  border: 0;
+  font-size: 100%;
+  width: 100%;
+}
+input[type=text]:focus {
+  border: 0;
+  outline: none;
 }
 .material-icons {
   color: #8a8a8a;

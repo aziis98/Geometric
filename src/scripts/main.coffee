@@ -116,6 +116,8 @@ angular.module('geometric', [ 'toolbar', 'gcanvas', 'structure', 'infobar', 'han
                     tool.dragging = false
                     tool.dragged = undefined
 
+            $(document).on 'click','input[type=text]', -> @select()
+
             mouse.vw = $('.gcanvas').width()
             mouse.vh = $('.gcanvas').height()
 
@@ -123,3 +125,6 @@ angular.module('geometric', [ 'toolbar', 'gcanvas', 'structure', 'infobar', 'han
         $(window).resize (e) ->
             mouse.vw = $('.gcanvas').width()
             mouse.vh = $('.gcanvas').height()
+
+        _plane.addPrimitive new PPoint(100, 100)
+        _plane.addPrimitive new PPoint(200, 200)

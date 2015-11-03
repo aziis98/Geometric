@@ -10,7 +10,7 @@ angular.module('structure', ['handler']).directive('structure', function() {
     restrict: 'E',
     replace: true,
     templateUrl: 'templates/pane-listview.frag.html',
-    controller: function($scope, plane) {
+    controller: function($scope, plane, tool) {
       $scope.$watch((function() {
         return plane.primitives;
       }), (function() {
@@ -22,6 +22,11 @@ angular.module('structure', ['handler']).directive('structure', function() {
         for (i = j = 0, ref = plane.primitives.length; 0 <= ref ? j < ref : j > ref; i = 0 <= ref ? ++j : --j) {
           if (i === index) {
             plane.primitives[i].options.selected = !plane.primitives[i].options.selected;
+            if (plane.primitives[i].options.selected) {
+              tool.selectedPrimitive = plane.primitives[i];
+            } else {
+              tool.selectedPrimitive = void 0;
+            }
           } else {
             plane.primitives[i].options.selected = false;
           }
@@ -34,16 +39,24 @@ angular.module('structure', ['handler']).directive('structure', function() {
     restrict: 'E',
     replace: true,
     templateUrl: 'templates/pane-properties.frag.html',
-    controller: function($scope, plane) {
+    controller: function($scope, plane, tool) {
       return $scope.$watch((function() {
-        return plane.primitives.filter(function(p) {
-          return p.options.selected;
-        })[0];
+        return tool.selectedPrimitive;
       }), (function() {
-        return $scope.current = plane.primitives.filter(function(p) {
-          return p.options.selected;
-        })[0];
+        return $scope.selected = tool.selectedPrimitive;
       }));
     }
+  };
+}).directive('valueInput', function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    scope: {
+      value: '='
+    },
+    templateUrl: function(elem, attr) {
+      return 'templates/property-#{attr.type}.frag.html';
+    },
+    controller: function($scope) {}
   };
 });

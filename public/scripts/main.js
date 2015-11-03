@@ -133,11 +133,16 @@ angular.module('geometric', ['toolbar', 'gcanvas', 'structure', 'infobar', 'hand
         return tool.dragged = void 0;
       }
     });
+    $(document).on('click', 'input[type=text]', function() {
+      return this.select();
+    });
     mouse.vw = $('.gcanvas').width();
     return mouse.vh = $('.gcanvas').height();
   });
-  return $(window).resize(function(e) {
+  $(window).resize(function(e) {
     mouse.vw = $('.gcanvas').width();
     return mouse.vh = $('.gcanvas').height();
   });
+  _plane.addPrimitive(new PPoint(100, 100));
+  return _plane.addPrimitive(new PPoint(200, 200));
 });

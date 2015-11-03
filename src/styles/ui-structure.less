@@ -15,20 +15,21 @@
         // border-bottom: 1px solid @ui-borders;
         height: calc(~"50vh - 18px");
         margin: 0px 5px;
+        // box-sizing: border-box;
 
-        .listview {
-            overflow: auto;
-            height: calc(~"50vh - 50px");
-        }
-
-        *.title {
+        .title {
             font-size: 130%;
             border-bottom: 1px solid @ui-borders;
             border-top: 1px solid @ui-borders;
             text-align: center;
         }
 
-        *.listview {
+        .view {
+            overflow: auto;
+            height: calc(~"50vh - 50px");
+        }
+
+        .list {
             .item {
                 &:hover {
                     background-color: @ui-hover;
@@ -49,6 +50,52 @@
                 }
             }
         }
+
+        .properties {
+            padding: 0px 10px;
+            font-size: 110%;
+
+            .typename {
+                text-align: center;
+                padding: 10px 0px;
+                box-sizing: border-box;
+                display: block;
+
+                input[type=text] {
+                    font-size: 120%;
+                    text-align: center;
+                }
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+            tr, td, th {
+                text-align: left;
+                border-top: 1px solid @ui-borders;
+                border-bottom: 1px solid @ui-borders;
+
+                .key {
+                    width: 7vw;
+                }
+            }
+            th {
+                font-weight: lighter;
+            }
+        }
+    }
+}
+
+input[type=text] {
+    border: 0;
+    font-size: 100%;
+    width: 100%;
+
+
+    &:focus {
+        border: 0;
+        outline: none;
     }
 }
 

@@ -17,7 +17,7 @@ exports.PPlane = PPlane = (function() {
       primitive = ref[i];
       if (primitive.options.visible) {
         primitive.render(g);
-        if (primitive.options.hover || primitive.options.selected) {
+        if (primitive.options.hover) {
           primitive.highLight(g);
         }
       }
@@ -54,14 +54,23 @@ exports.PPoint = PPoint = (function() {
     this.y = y1;
     this.typename = 'PPoint';
     this.options = {
-      visible: true
+      visible: true,
+      hover: false,
+      selected: false,
+      name: '???'
     };
-    this.color = '#000000';
+    this.renderer = {
+      flagColor: {
+        type: 'color',
+        color: '#000000'
+      }
+    };
     this.nosnap = false;
   }
 
   PPoint.prototype.render = function(g) {
-    g.setColor(this.color);
+    g.setColor(this.renderer.flagColor.color);
+    g.setLineWidth(1);
     g.drawCircle(this.getX(), this.getY(), 5);
     return g.fillCircle(this.getX(), this.getY(), 3);
   };
@@ -124,7 +133,7 @@ exports.PPoint = PPoint = (function() {
 
   PPoint.getLineLink = function(line, ctrlPt) {
     var p1;
-    ctrlPt.color = '#0000FF';
+    ctrlPt.renderer.flagColor.color = '#0000FF';
     ctrlPt.nosnap = true;
     p1 = PLine.getPerpendicular(line, ctrlPt);
     return PLine.getIntersection(p1, line);
@@ -138,9 +147,18 @@ exports.PLine = PLine = (function() {
   function PLine(a, b, c) {
     this.typename = 'PLine';
     this.options = {
-      visible: true
+      visible: true,
+      hover: false,
+      selected: false,
+      name: '???'
     };
-    this.color = '#000000';
+    this.renderer = {
+      color: {
+        type: 'color',
+        color: '#000000',
+        alpha: 1.0
+      }
+    };
     if (a.typename === 'PPoint') {
       this.a = function() {
         return b.getY() - a.getY();
@@ -168,7 +186,8 @@ exports.PLine = PLine = (function() {
     }
     this._x1 = (this._c - this._b * this._ty) / this._a;
     this._x2 = (this._c - this._b * (this._ty + g.viewport.height)) / this._a;
-    g.setColor(this.color);
+    g.setColor(this.renderer.color.color);
+    g.ctx.globalAlpha = this.renderer.color.alpha;
     if (this._a !== 0) {
       return g.drawLine(this._x1, this._ty, this._x2, this._ty + g.viewport.height);
     } else {
@@ -232,9 +251,27 @@ exports.PCircle = PCircle = (function() {
   function PCircle(center, other) {
     this.typename = 'PCircle';
     this.options = {
-      visible: true
+      visible: true,
+      hover: false,
+      selected: false,
+      name: '???'
     };
-    this.color = '#000000';
+    this.renderer = {
+      border: {
+        type: 'color',
+        color: '#000000',
+        alpha: 1.0
+      },
+      fill: {
+        type: 'color',
+        color: 'transparent',
+        alpha: 1.0
+      },
+      borderWidth: {
+        type: 'number',
+        value: 1.0
+      }
+    };
     this.center = center;
     this.radius = function() {
       return center.distance(other.getX(), other.getY());
@@ -242,7 +279,12 @@ exports.PCircle = PCircle = (function() {
   }
 
   PCircle.prototype.render = function(g) {
-    g.setColor(this.color);
+    g.setColor(this.renderer.fill.color);
+    g.ctx.globalAlpha = this.renderer.fill.alpha;
+    g.fillCircle(this.center.getX(), this.center.getY(), this.radius());
+    g.setLineWidth(this.renderer.borderWidth.value);
+    g.setColor(this.renderer.border.color);
+    g.ctx.globalAlpha = this.renderer.border.alpha;
     return g.drawCircle(this.center.getX(), this.center.getY(), this.radius());
   };
 

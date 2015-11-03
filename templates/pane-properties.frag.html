@@ -1,6 +1,17 @@
-<div class="pane properties">
-    <div class="title">
-        Properties
+<div class="pane">
+    <div class="title">Properties</div>
+    <div class="properties view" ng-if="selected">
+        <span class="typename"><input type="text" ng-model="selected.options.name"></span>
+
+        <table>
+            <tr ng-repeat="(key, value) in selected.renderer">
+                <td class="key">
+                    {{ key | titlecase }}
+                </td>
+                <td>
+                    <value-input type="key" value="value"></value-input>
+                </td>
+            </tr>
+        </table>
     </div>
-    {{current.typename}}
 </div>
