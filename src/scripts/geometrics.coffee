@@ -32,6 +32,8 @@ exports.PPlane = class PPlane
 exports.PPoint = class PPoint
     constructor: (@x, @y) ->
         @typename = 'PPoint'
+        @dirty = true
+        @dependant = []
         @options =
             visible: true
             hover: false
@@ -59,9 +61,14 @@ exports.PPoint = class PPoint
         g.setLineWidth(1)
 
     getX: ->
-        return (@x?() ? @x)
+        if dirty
+            @_x = (@x?() ? @x)
+        return @_x
     getY: ->
-        return (@y?() ? @y)
+        if dirty
+            @_y = (@y?() ? @y)
+        return @_y
+
     isUndependant: ->
         return typeof @x isnt 'function'
 
@@ -101,6 +108,7 @@ exports.PPoint = class PPoint
 exports.PLine = class PLine
     constructor: (a, b, c) ->
         @typename = 'PLine'
+        @dirty = true
         @options =
             visible: true
             hover: false
@@ -109,6 +117,7 @@ exports.PLine = class PLine
         @renderer =
             color:
                 type: 'color'
+                label: 'Color'
                 color: '#000000'
                 alpha: 1.0
 
@@ -123,9 +132,11 @@ exports.PLine = class PLine
 
     render: (g) ->
         @_ty = -g.transform.y
-        @_a = @a()
-        @_b = @b()
-        @_c = @c()
+
+        if dirty
+            @_a = @a()
+            @_b = @b()
+            @_c = @c()
 
         @_y = @_c / @_b if @_a == 0
 
@@ -156,8 +167,8 @@ exports.PLine = class PLine
         return Math.abs(_a * x + _b * y - _c) / Math.sqrt(_a * _a + _b * _b)
 
     @getPerpendicular: (line, pt) ->
-        return new PLine(line.b, (-> -line.a()),
-            (-> pt.getX() * line.b() - pt.getY() * line.a())
+        return new PLine(line.b, (-> -line._a),
+            (-> pt.getX() * line._b - pt.getY() * line._a)
         )
 
     @getParallel: (line, pt) ->

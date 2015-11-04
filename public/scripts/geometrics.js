@@ -53,6 +53,8 @@ exports.PPoint = PPoint = (function() {
     this.x = x1;
     this.y = y1;
     this.typename = 'PPoint';
+    this.dirty = true;
+    this.dependant = [];
     this.options = {
       visible: true,
       hover: false,
@@ -88,12 +90,18 @@ exports.PPoint = PPoint = (function() {
 
   PPoint.prototype.getX = function() {
     var ref;
-    return (ref = typeof this.x === "function" ? this.x() : void 0) != null ? ref : this.x;
+    if (dirty) {
+      this._x = (ref = typeof this.x === "function" ? this.x() : void 0) != null ? ref : this.x;
+    }
+    return this._x;
   };
 
   PPoint.prototype.getY = function() {
     var ref;
-    return (ref = typeof this.y === "function" ? this.y() : void 0) != null ? ref : this.y;
+    if (dirty) {
+      this._y = (ref = typeof this.y === "function" ? this.y() : void 0) != null ? ref : this.y;
+    }
+    return this._y;
   };
 
   PPoint.prototype.isUndependant = function() {
@@ -146,6 +154,7 @@ exports.PPoint = PPoint = (function() {
 exports.PLine = PLine = (function() {
   function PLine(a, b, c) {
     this.typename = 'PLine';
+    this.dirty = true;
     this.options = {
       visible: true,
       hover: false,
@@ -155,6 +164,7 @@ exports.PLine = PLine = (function() {
     this.renderer = {
       color: {
         type: 'color',
+        label: 'Color',
         color: '#000000',
         alpha: 1.0
       }
@@ -178,9 +188,11 @@ exports.PLine = PLine = (function() {
 
   PLine.prototype.render = function(g) {
     this._ty = -g.transform.y;
-    this._a = this.a();
-    this._b = this.b();
-    this._c = this.c();
+    if (dirty) {
+      this._a = this.a();
+      this._b = this.b();
+      this._c = this.c();
+    }
     if (this._a === 0) {
       this._y = this._c / this._b;
     }
@@ -220,9 +232,9 @@ exports.PLine = PLine = (function() {
 
   PLine.getPerpendicular = function(line, pt) {
     return new PLine(line.b, (function() {
-      return -line.a();
+      return -line._a;
     }), (function() {
-      return pt.getX() * line.b() - pt.getY() * line.a();
+      return pt.getX() * line._b - pt.getY() * line._a;
     }));
   };
 
