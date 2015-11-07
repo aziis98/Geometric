@@ -73,8 +73,11 @@ angular.module('gcanvas', ['handler']).directive('geometricCanvas', function() {
         }
       };
       return $interval((function() {
-        return render($scope.getGraphics());
-      }), 1000 / 120);
+        var start;
+        start = new Date().getTime();
+        render($scope.getGraphics());
+        return console.log('Speed: ' + ((new Date().getTime()) - start));
+      }), 1);
     }
   };
 });

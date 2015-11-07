@@ -66,4 +66,8 @@ angular.module('gcanvas', [ 'handler' ])
                     g.drawLine(mouse.x - 10, mouse.y, mouse.x + 10, mouse.y)
                     g.drawLine(mouse.x, mouse.y - 10, mouse.x, mouse.y + 10)
 
-            $interval((-> render($scope.getGraphics())), 1000 / 120)
+            $interval (->
+                start = new Date().getTime()
+                render($scope.getGraphics())
+                console.log 'Speed: ' + ((new Date().getTime()) - start)
+            ), 1
